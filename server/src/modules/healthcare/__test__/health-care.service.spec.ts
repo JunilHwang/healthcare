@@ -1,13 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HealthCareService } from '../health-care.service';
-import { HttpModule } from '@nestjs/axios';
+import { HttpModule, HttpService } from '@nestjs/axios';
+import { CacheModule } from '@nestjs/common';
 
 describe('HealthCareService', () => {
   let healthCareService: HealthCareService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        CacheModule.register(),
         HttpModule.register({
           timeout: 5000,
           baseURL: 'http://49.50.167.136:9871/api',
@@ -17,9 +19,15 @@ describe('HealthCareService', () => {
     }).compile();
 
     healthCareService = module.get(HealthCareService);
+    Object.assign(healthCareService);
+    await healthCareService.initData();
   });
 
   it('성별 목록을 가져옴', async () => {
+    const results = jest.fn().mockResolvedValue({
+      genderList: ['남자', '여자'],
+    });
+
     const result = await healthCareService.getGenders();
     expect(result).toHaveProperty('genderList');
   });
