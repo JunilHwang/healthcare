@@ -1,0 +1,10 @@
+{
+  "name": "linewalks-health-care",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/JunilHwang/healthcare.git",
+  "author": "JunilHwang <junil.h@kakao.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": ["client", "domain", "server"]
+}
