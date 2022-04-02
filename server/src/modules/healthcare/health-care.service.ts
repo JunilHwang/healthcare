@@ -2,38 +2,54 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import {
   EthnicityResponse,
-  Filters,
   GendersResponse,
+  PatientBriefResponse,
+  PatientResponse,
   RaceResponse,
 } from '@healthcare/domain';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class HealthCareService {
-  #filters: Filters;
-
   constructor(private readonly httpService: HttpService) {}
 
-  public async getFilters(): Promise<Filters> {
-    if (this.#filters !== undefined) {
-      return this.#filters;
-    }
-    const ethnicity = lastValueFrom(
+  public async getEthnicities() {
+    const response = await lastValueFrom(
       this.httpService.get<EthnicityResponse>('/ethnicity/list'),
     );
-    const race = lastValueFrom(
+
+    return response.data;
+  }
+
+  public async getRace() {
+    const response = await lastValueFrom(
       this.httpService.get<RaceResponse>('/race/list'),
     );
-    const gender = lastValueFrom(
+
+    return response.data;
+  }
+
+  public async getGenders() {
+    const response = await lastValueFrom(
       this.httpService.get<GendersResponse>('/gender/list'),
     );
 
-    this.#filters = {
-      ethnicity: await ethnicity.then(({ data }) => data.ethnicityList),
-      race: await race.then(({ data }) => data.raceList),
-      gender: await gender.then(({ data }) => data.genderList),
-    };
+    return response.data;
+  }
 
-    return this.#filters;
+  public async getPatients() {
+    const response = await lastValueFrom(
+      this.httpService.get<PatientResponse>('/patient/list'),
+    );
+
+    return response.data;
+  }
+
+  public async getPatientBrief(personID: number) {
+    const response = await lastValueFrom(
+      this.httpService.get<PatientBriefResponse>(`/patient/brief/${personID}`),
+    );
+
+    return response.data;
   }
 }

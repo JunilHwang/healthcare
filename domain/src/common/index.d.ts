@@ -5,12 +5,14 @@ export interface PatientAndBrief extends Patient {
   visitCount: number;
 }
 
+export interface Filters {
+  gender: string[]; // 성별
+  race: string[]; // 인종
+  ethnicity: string[]; // 민족
+}
+
 export interface CommonDataResponse {
-  filterTypes: {
-    gender: string[]; // 성별
-    race: string[]; // 인종
-    ethnicity: string[]; // 민족
-  };
+  filters: Filters;
   patients: PatientAndBrief[];
   stats: PatientStat[];
 }
