@@ -19,12 +19,32 @@ describe('HealthCareService', () => {
     healthCareService = module.get(HealthCareService);
   });
 
-  it('filter를 가져오는 테스트', async () => {
-    const filters = await healthCareService.getFilters();
-    expect(filters).toEqual({
-      ethnicity: ['nonhispanic', 'hispanic'],
-      gender: ['M', 'F'],
-      race: ['other', 'native', 'black', 'white', 'asian'],
-    });
+  it('성별 목록을 가져옴', async () => {
+    const result = await healthCareService.getGenders();
+    expect(result).toHaveProperty('genderList');
+  });
+
+  it('민족 목록을 가져옴', async () => {
+    const result = await healthCareService.getEthnicities();
+    expect(result).toHaveProperty('ethnicityList');
+  });
+
+  it('인종 목록을 가져옴', async () => {
+    const result = await healthCareService.getRace();
+    expect(result).toHaveProperty('raceList');
+  });
+
+  it('환자 목록을 가져옴', async () => {
+    const result = await healthCareService.getPatients();
+    expect(result).toHaveProperty('patient');
+  });
+
+  it('환자의 상세정보의 요약정보를 가져옴', async () => {
+    const { patient } = await healthCareService.getPatients();
+    const result = await healthCareService.getPatientBrief(
+      patient.list[0].personID,
+    );
+    expect(result).toHaveProperty('conditionList');
+    expect(result).toHaveProperty('visitCount');
   });
 });
